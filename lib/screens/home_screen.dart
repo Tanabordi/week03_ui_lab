@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../widgets/item_card.dart';
+import '../widgets/user_profile_card.dart';
 import 'detail_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -42,6 +43,55 @@ class _HomeScreenState extends State<HomeScreen> {
     });
   }
 
+  Widget _buildBody() {
+    switch (_selectedIndex) {
+      case 0:
+        return ListView.builder(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          itemCount: _items.length,
+          itemBuilder: (context, index) {
+            final item = _items[index];
+            return ItemCard(
+              title: item['title'],
+              subtitle: item['subtitle'],
+              icon: item['icon'],
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => DetailScreen(
+                      title: item['title'],
+                      subtitle: item['subtitle'],
+                    ),
+                  ),
+                );
+              },
+            );
+          },
+        );
+      case 1:
+        return const Center(
+          child: Text('หน้าค้นหา (Search)'),
+        );
+      case 2:
+        return const Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: UserProfileCard(
+              name: 'Tanabordi Boonpamorn',
+              email: '67030298@kmitl.ac.th',
+              postsCount: 15,
+              followersCount: 120,
+              followingCount: 45,
+            ),
+          ),
+        );
+      default:
+        return const SizedBox.shrink();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,29 +106,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
         ],
       ),
-      body: ListView.builder(
-        padding: const EdgeInsets.symmetric(vertical: 8),
-        itemCount: _items.length,
-        itemBuilder: (context, index) {
-          final item = _items[index];
-          return ItemCard(
-            title: item['title'],
-            subtitle: item['subtitle'],
-            icon: item['icon'],
-            onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => DetailScreen(
-                    title: item['title'],
-                    subtitle: item['subtitle'],
-                  ),
-                ),
-              );
-            },
-          );
-        },
-      ),
+      body: _buildBody(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
           ScaffoldMessenger.of(context).showSnackBar(
